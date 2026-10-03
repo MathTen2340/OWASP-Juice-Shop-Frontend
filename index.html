@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Login Page</title>
+</head>
+<body>
+  <h2>Login</h2>
+  <form id="loginPage">
+    <input id="email" type="text" placeholder="Email">
+    <br><br>
+    <input id="password" type="password" placeholder="Password">
+    <br><br>
+    <button type="submit">Login</button>
+  </form>
+  <p id="message"></p>
+  <script>
+    document.getElementById("loginPage").addEventListener("submit", async function (event) {
+      event.preventDefault();
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      const message = document.getElementById("message");
+      if (email === "" || password === "") {
+        message.textContent = "Need to enter email and password";
+        return;
+      }
+      if (!email.includes("@")) {
+        message.textContent = "Need to enter valid email";
+        return;
+      }
+      if (password.length < 8) {
+        message.textContent = "Need to have at least 8 character password length";
+        return;
+      }
+      const response = await fetch("/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ email, password })
+      });
+      const result = await response.json();
+      message.textContent = result.error_message;
+    });
+  </script>
+</body>
+</html>
